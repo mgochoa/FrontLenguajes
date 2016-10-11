@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>AF with Angular</title>
+    
+    
+    
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css'>
+
+        <link rel="stylesheet" href="css/style.css">
+
+    
+    
+    
+    
+  </head>
+
+  <body>
+
+    <html>
+  <head>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <meta charset="utf-8">
+    
+    <title>Automatas </title>
+
+    <link href="http://cdn.foundation5.zurb.com/foundation.css" rel="stylesheet">
+   
+  </head>
+
+  <body>
+    <div class="container"ng-app="productsTableApp"><div class="page-header">
+  <h1>Practica #1: Automatas <small>Teoria de lenguajes 2016-2</small></h1>
+</div>
+          <div   ng-controller="ProductsController" style="margin-bottom:30px;">
+           <div class="container">
+  <button type="button" class="btn btn-link btn-lg " data-toggle="collapse" data-target="#demo">Recomendaciones</button>
+  <div id="demo" class="collapse">
+   <ul class="list-group">
+  <li class="list-group-item">Ingresar  los estados de una sola manera: mayúsculas o minúsculas</li>
+  <li class="list-group-item">Ingresar "X" en vez del estado de error o el vacio, y acuerdese de agregarlo como una linea de estado</li>
+   <li class="list-group-item">Primero determinar el automata y luego probar la hilera</li>
+     <li class="list-group-item">Para el buen funcionamiento de la aplicación evite dejar campos vacios</li>
+   <li class="list-group-item">Si desea escribir un automata finito no deterministico use comas    ","</li>
+</ul>
+  </div>
+</div>
+            <p>Clickear los botones para agregar o eliminar columnas y filas</p>
+            <div class="btn-group" role="group" aria-label="..." style="padding-bottom:10px;">
+                <button class="btn btn-primary" type="button" ng-click="addColumn()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Columna</button>
+                <button class="btn btn-primary" type="button" ng-click="addRow()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Fila</button>
+             <button id="remCol" class="btn btn-danger" type="button" ng-click="removeColumn()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Columna</button>
+              <button  class="btn btn-danger" type="button" ng-click="resetData()"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Borrar datos</button>
+            </div>     
+            
+        
+            <!---New table improvement-->
+            <table class="table ">
+                  <tr class="primary">
+                    <th class="text-center"><h4>Estado/Simbolo</h1></th>
+                    <th ng-repeat="y in simbolosMejores">
+                      <input type="text" ng-model="y.sim" class="bold text-center"/>
+          
+                    </th>
+                    <th class="text-center"><h4>Aceptación</h4></th>
+                    <th ></th>
+                  </tr>
+                    <tr ng-repeat="datum in datosMejores">
+                       
+                    
+                        <td ng-repeat="field in datum.data">
+                          <input class="text-center" type="text" ng-model="field.es"/>
+                          
+                  		 </td>
+                      <td class="checkboxCentered">
+                             <div class="checkbox">
+                                        <label>
+                                        <input type="checkbox" id="blankCheckbox" ng-model="datum.acept"  aria-label="...">
+                                      </label>
+                             </div>
+                      </td>
+                      <td>
+                        <button id="remRow" type="button" class="btn btn-danger" ng-click="removeRow($index)"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remover fila</button>
+                      </td>
+                
+                      
+                    </tr>
+                </table>
+     
+             
+            <div class="btn-group-vertical" role="group" aria-label="...">
+              <button class="btn btn-default" type="button" ng-click="peticion()"><span class="fa fa-cogs" aria-hidden="true"></span> Determinar automata</button>
+</div>
+            <div ng-show="showLoadings.response"class="alert alert-success animate-show" role="alert">Listo!</div>
+<div ng-show="showLoadings.state" class="alert alert-info animate-show" role="alert">Procesando...</div>
+ <div ng-show="showLoadings.afnd" class="alert alert-info animate-show" role="alert">Automata no deterministico</div>
+  <div ng-show="showLoadings.afd" class="alert alert-info animate-show" role="alert">Automata deterministico</div> 
+<div ng-show="showLoadings.error" class="alert alert-warning animate-show" role="alert">Error en los datos</div>
+             <div class="input-group">
+      <span class="input-group-btn">
+        <button id="btn-probar" class="btn btn-default" type="button" ng-click="comprobarHilera()" ng-disabled="disabled">Probar hilera</button>
+      </span>
+      <input ng-model="hilera" type="text" class="form-control" placeholder="Insertar hilera de prueba">
+    </div><!-- /input-group -->
+              <div ng-show="comprobarState.response"class="alert alert-success animate-show" role="alert">La hilera se acepta</div>
+<div ng-show="comprobarState.state" class="alert alert-info animate-show" role="alert">Procesando...</div>
+
+<div ng-show="comprobarState.error" class="alert alert-warning animate-show" role="alert">La hilera se rechaza</div>
+            <div ng-show="comprobarState.response||comprobarState.error" class="alert alert-info animate-show" role="alert">Determine de nuevo el Automata si quiere probar uno nuevo!</div>
+         
+
+
+          </div>
+              
+  
+     </div>
+    <footer>
+    <div class="footer" id="footer">
+        <div class="container">
+            <div class="row">
+                
+               
+                <div class="col-lg-3  col-md-3 col-sm-6 col-xs-12 ">
+                    <h3> Manuel Ochoa </h3>
+                    <ul>
+                        <li> 1037639399 </li>
+                      <li> <a href="mailto:mguillermo.ochoa@udea.edu.co">mguillermo.ochoa@udea.edu.co</a> </li>
+                        <li> FrontEnd: Angular - Bootstrap </li>
+                       
+                    </ul>
+                    <ul class="social">
+                        <li> <a  target="_blank" href="https://www.facebook.com/MgOchoa"> <i class=" fa fa-facebook">   </i> </a> </li>
+                        <li> <a  target="_blank" href="https://www.github.com/mgochoa"> <i class="fa fa-github">   </i> </a> </li>
+                  
+                    </ul>
+                </div>
+               <div class="col-lg-3  col-md-3 col-sm-6 col-xs-12 ">
+                    <h3>Santiago Sanmartin</h3>
+                    <ul>
+                         <li> 1017209945 </li>
+                      <li> <a href="mailto:santiago.sanmartin@udea.edu.co">santiago.sanmartin@udea.edu.co</a> </li>
+                        <li> BackEnd: Java - Spring </li>
+                    </ul>
+                    <ul class="social">
+                     <li> <a href="#"> <i class=" fa fa-facebook" >   </i> </a> </li>
+                     <li> <a href="#"> <i class="fa fa-github" aria-hidden="true">   </i> </a> </li>
+                    </ul>
+                </div>
+            </div>
+            <!--/.row--> 
+        </div>
+        <!--/.container--> 
+    </div>
+    <!--/.footer-->
+    
+    <div class="footer-bottom">
+        <div class="container">
+            <p class="pull-left"> Copyright © Udea Development 2016-2 </p>
+            
+        </div>
+    </div>
+    <!--/.footer-bottom--> 
+</footer>
+<!-- Button trigger modal -->
+    
+
+   </body>
+</html>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.7.0.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js'></script>
+
+        <script src="js/index.js"></script>
+
+    
+    
+  </body>
+</html>
